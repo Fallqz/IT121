@@ -14,34 +14,25 @@
 
     <script>
         const grades = "jim|25, sue|32, mary|34, ann|22, ted|28, frank|15, lisa|19, mike|30, ahn|26, vishaya|27";
-
         const studentEntries = grades.split(", ");
-
-        const names = [];
-        const scores = [];
+        const names = [], scores = [];
 
         studentEntries.forEach(entry => {
             const [name, score] = entry.split("|");
-            names.push(name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()); 
-            scores.push(parseInt(score)); 
+            names.push(name.charAt(0).toUpperCase() + name.slice(1).toLowerCase());
+            scores.push(+score);
         });
 
-        const studentList = document.getElementById("student-list");
-        names.forEach((name, index) => {
-            const listItem = document.createElement("li");
-            listItem.textContent = `${name} - ${scores[index]}`;
-            studentList.appendChild(listItem);
+        names.forEach((name, i) => {
+            const li = document.createElement("li");
+            li.textContent = `${name} - ${scores[i]}`;
+            document.getElementById("student-list").appendChild(li);
         });
 
         document.getElementById("total-students").textContent = studentEntries.length;
-
-        const lowestScore = Math.min(...scores);
-        const highestScore = Math.max(...scores);
-        const averageScore = scores.reduce((acc, score) => acc + score, 0) / scores.length;
-
-        document.getElementById("lowest-score").textContent = lowestScore;
-        document.getElementById("highest-score").textContent = highestScore;
-        document.getElementById("average-score").textContent = averageScore.toFixed(2);
+        document.getElementById("lowest-score").textContent = Math.min(...scores);
+        document.getElementById("highest-score").textContent = Math.max(...scores);
+        document.getElementById("average-score").textContent = (scores.reduce((a, b) => a + b) / scores.length).toFixed(2);
     </script>
 </body>
 </html>
