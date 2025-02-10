@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>replit</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+  <script
+    src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+    crossorigin="anonymous"></script>
 </head>
-
 <body>
-  <h1>HW 1 - Tell me about yourself</h1>
 
-  <script src="script.js"></script>
+<h1>Robo Dealer</h1>
 
-  <script>
-    document.write("My name is " + firstName + " " + lastName + ". ");
-    document.write("I have been at SCC for " + yearsOfStudy + " years and plan to " + goal + " after completing my courses.");
-  </script>
+<button onclick="dealHand();">Deal Hand</button>
+
+<hr><div id="card_hand"></div>
+
+<script>
+  const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
+  const faceCards = ['Jack', 'Queen', 'King', 'Ace'];
+
+  let deck = [];
+  suits.forEach(suit => {
+    for (let i = 2; i <= 10; i++) deck.push(`${i} of ${suit}`);
+    faceCards.forEach(card => deck.push(`${card} of ${suit}`));
+  });
+
+  const dealHand = () => {
+    const hand = [];
+    while (hand.length < 5) {
+      const randomIndex = Math.floor(Math.random() * 52);
+      if (!hand.includes(deck[randomIndex])) hand.push(deck[randomIndex]);
+    }
+    $("#card_hand").html(hand.join('<br>'));
+  };
+</script>
 
 </body>
-
 </html>
