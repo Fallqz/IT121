@@ -1,0 +1,100 @@
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+                integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+                crossorigin="anonymous"></script>
+    </head>
+    <style>
+        button {
+            margin: 5px;
+        }
+    </style>
+
+    <body>
+        <div id="buttons"></div>
+        <table border='1'>
+            <thead>
+                <tr>
+                    <th>name</th>
+                    <th>role</th>
+                    <th>house</th>
+                    <th>gender</th>
+                    <th>alignment</th>
+                </tr>
+            </thead>
+            <tbody id="character-table">
+                <!-- Rows will be inserted here -->
+            </tbody>
+        </table>
+        <button id="reset">Reset</button>
+    </body>
+
+    <script>
+        // list of characters
+        let characters = [
+            {name:"Albus Dumbledore", role:"staff", house:"Gryffindor", gender:"m", alignment:"good"},    
+            {name:"Nymphadora Tonks", role:"", house:"Hufflepuff", gender:"f", alignment:"good"},    
+            {name:"Ron Weasley", role:"student", house:"Gryffindor", gender:"m", alignment:"good"},    
+            {name:"Ginny Weasley", role:"student", house:"Gryffindor", gender:"f", alignment:"good"},    
+            {name:"Hermione Granger", role:"student", house:"Gryffindor", gender:"f", alignment:"good"},    
+            {name:"Mad-eye Moody", role:"staff", house:"", gender:"m", alignment:"good"},    
+            {name:"Prof McGonagall", role:"staff", house:"Gryffindor", gender:"f", alignment:"good"},    
+            {name:"Harry Potter", role:"student", house:"Gryffindor", gender:"m", alignment:"good"},    
+            {name:"Draco Malfoy", role:"student", house:"Slytherin", gender:"m", alignment:"evil"},    
+            {name:"Hagrid", role:"staff", house:"Gryffindor", gender:"m", alignment:"good"},    
+            {name:"Luna Lovegood", role:"student", house:"Ravenclaw", gender:"f", alignment:"good"},    
+            {name:"Voldemort", role:"", house:"Slytherin", gender:"m", alignment:"evil"},    
+            {name:"Bellatrix Lestrange", role:"", house:"Slytherin", gender:"f", alignment:"evil"},           
+            {name:"Severus Snape", role:"staff", house:"Slytherin", gender:"m", alignment:"?"}
+        ];
+
+        $(document).ready(function(){
+
+            // Generate house buttons dynamically
+            function generateHouseButtons() {
+                let houses = [...new Set(characters.map(c => c.house).filter(Boolean))]; // Extract unique houses
+                let buttonContainer = $('#buttons');
+                buttonContainer.empty();  // Clear previous buttons
+
+                houses.forEach(house => {
+                    let button = $('<button>').text(house).data('house', house);
+                    buttonContainer.append(button);
+                });
+            }
+
+            // Render table rows dynamically
+            function renderTable(characters) {
+                let tableBody = $('#character-table');
+                tableBody.empty();  // Clear the table
+
+                characters.forEach(character => {
+                    let row = $('<tr>')
+                        .append(`<td>${character.name}</td>`)
+                        .append(`<td>${character.role}</td>`)
+                        .append(`<td>${character.house}</td>`)
+                        .append(`<td>${character.gender}</td>`)
+                        .append(`<td>${character.alignment}</td>`);
+                    tableBody.append(row);
+                });
+            }
+
+            // Filter rows based on selected house
+            $(document).on('click', '#buttons button', function() {
+                let selectedHouse = $(this).data('house');
+                $('#character-table tr').each(function() {
+                    let rowHouse = $(this).find('td:nth-child(3)').text();
+                    $(this).toggle(rowHouse === selectedHouse);  // Show only matching house rows
+                });
+            });
+
+            // Reset button to show all rows
+            $('#reset').click(function() {
+                $('#character-table tr').show();  // Show all rows
+            });
+
+            // Initialize table and house buttons
+            generateHouseButtons();
+            renderTable(characters);
+        });
+    </script>
+</html>
