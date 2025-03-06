@@ -1,0 +1,86 @@
+<html>
+  <head>
+      <script
+              src="https://code.jquery.com/jquery-3.7.1.min.js"
+              integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+              crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <h3>Daily Weather Forecast</h3>
+    <hr>
+    <form>
+      City: <input type="text" id="city" placeholder="Enter City">
+      State:
+      <select id="state">
+          <option value="WA">Washington</option>
+      </select>
+    </form>
+    <button id="submit">Submit</button>
+    <div id="forecast"></div>
+
+    <script>
+      const API_KEY = "1280b216e439bd0b50a6c072bcb0db8e";
+
+      const kelvinToF = (value) => {
+          return (((Number(value) - 273.15) * 9) / 5 + 32).toFixed(2);
+      }
+
+      $('#submit').on('click', (e) => {
+          e.preventDefault();
+
+          let city = $('#city').val();
+          let state = $('#state').val();
+
+          if (!city) {
+              alert("Please enter a city.");
+              return;
+          }
+
+          let cityName = `${city},${state}`;
+
+          $.get(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}`)
+              .done(function(data) {
+                  if (data.cod !== 200) {
+                      alert("City not found. Please try again.");
+                      return;
+                  }
+
+                  let lat = data.coord.lat;
+                  let lon = data.coord.lon;
+
+                  $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
+                      .done(function(forecastData) {
+                          $('#forecast').empty();
+                          forecastData.list.forEach((forecast, index) => {
+                              if (index % 8 === 0) {
+                                  let date = new Date(forecast.dt * 1000);
+                                  let minTemp = kelvinToF(forecast.main.temp_min);
+                                  let maxTemp = kelvinToF(forecast.main.temp_max);
+                                  let humidity = forecast.main.humidity;
+                                  let description = forecast.weather[0].description;
+                                  let icon = forecast.weather[0].icon;
+
+                                  let forecastHtml = `
+                                      <div>
+                                          <h4>${date.toLocaleDateString()}</h4>
+                                          <img src="http://openweathermap.org/img/w/${icon}.png" alt="${description}">
+                                          <p>${description}</p>
+                                          <p>Min: ${minTemp}°F / Max: ${maxTemp}°F</p>
+                                          <p>Humidity: ${humidity}%</p>
+                                      </div>
+                                  `;
+                                  $('#forecast').append(forecastHtml);
+                              }
+                          });
+                      })
+                      .fail(function() {
+                          alert("Error fetching forecast data.");
+                      });
+              })
+              .fail(function() {
+                  alert("Error fetching city data.");
+              });
+      });
+    </script>
+  </body>
+</html>
