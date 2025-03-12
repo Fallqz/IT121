@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas Animation</title>
+  <style>
+    body, html { margin: 0; overflow: hidden; height: 100%; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="myCanvas"></canvas>
+  <script>
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let x = 100, y = 100, dx = 2, dy = 2, radius = 30;
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+
+      // Rectangle
+      ctx.fillStyle = 'lightblue';  
+      ctx.fillRect(50, 50, 200, 150);
+
+      // Line
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(canvas.width, canvas.height);
+      ctx.strokeStyle = 'green';
+      ctx.stroke();
+
+      // Circle
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = 'orange';  
+      ctx.fill();
+      ctx.stroke();
+
+      // Circle movement
+      x += dx; y += dy;
+      if (x + radius > canvas.width || x - radius < 0) dx = -dx;
+      if (y + radius > canvas.height || y - radius < 0) dy = -dy;
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
+</body>
+</html>
